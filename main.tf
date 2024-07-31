@@ -12,7 +12,7 @@ terraform {
     region = "us-east-1"
     bucket = "tfstate-nts16-2024"
     dynamodb_table = "nts16-dynamodbtable"   
-    key = "desa_demo_key"
+    key = "dasa_demo_key"
 
    }
 

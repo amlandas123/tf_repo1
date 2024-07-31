@@ -1,18 +1,21 @@
 provider "aws" {
-    access_key = var.access_key
-    secret_key = var.secret_key
+
     region = "us-east-1"
 
 }
 
 
-variable "access_key" {
-    type = string 
-}
+terraform {
 
-variable "secret_key" {
+ backend "s3" {
 
-    type = string  
+    region = "us-east-1"
+    bucket = "tfstate-nts16-2024"
+    dynamodb_table = "nts16-dynamodbtable"   
+    key = "desa_demo_key"
+
+   }
+
 }
 
 
@@ -52,6 +55,55 @@ filename = var.keyname
 
 }
 
+
+resource "aws_instance" "web-server" {
+
+ ami      = "ami-0a0e5d9c7acc336f1"
+
+ instance_type = "t2.micro"
+
+ key_name   = var.keyname
+
+
+
+
+
+ 
+
+ provisioner "remote-exec" {
+
+   inline = [
+
+      "sudo apt-get update",
+      "sudo apt-get update",
+      "sudo apt install -y apache2",
+      "sudo chmod -R 777 /var/www/html/"
+
+	]
+
+  }
+
+	
+
+ provisioner "file" {
+
+  source   = "index.html"
+
+  destination = "/var/www/html/index.html"
+
+ }
+
+ connection {
+
+  user    = "ubuntu"
+
+  private_key = "${file(local_file.tf-key.filename)}"
+
+   host = "${aws_instance.web-server.public_ip}"
+
+ }
+
+}
 
 
 

@@ -3,9 +3,9 @@ provider "aws" {
 }
 
 resource "aws_vpc" "amlandas-vpc" {
-    cidr_block = var.cidr_range
+    cidr_block = "192.168.0.0/24"
     tags = {
-      "Name"=var.vpc_name
+      "Name"= "dasabihan"
     }
   
 }
